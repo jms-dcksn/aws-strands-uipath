@@ -65,34 +65,3 @@ async def main(input: AgentInput):
     with streamable_http_mcp_client:
         result = await agent.invoke_async(message)
         return result
-
-# Alternative approach using async context manager
-# @asynccontextmanager
-# async def make_agent():
-#     async with streamablehttp_client(
-#         url=os.getenv("UIPATH_MCP_URL"),
-#         headers={"Authorization": f"Bearer {os.getenv('UIPATH_ACCESS_TOKEN')}"},
-#         timeout=60,
-#     ) as (read, write, _):
-#         async with ClientSession(read, write) as session:
-#             await session.initialize()
-#             tools = await session.list_tools()
-#             print(tools)
-#             agent = Agent(
-#                 system_prompt="You are a helpful assistant that can use MCP tools. Use the WebSummary MCP tool to search the web for the user's query.",
-#                 tools=tools,
-#                 callback_handler=None
-#             )
-#             yield agent
-
-# async def main_with_context_manager(input: AgentInput):
-#     """Alternative main function using the async context manager approach"""
-#     async with make_agent() as agent:
-#         result = await agent.invoke_async(input.message)
-#         return result
-
-# Run the async function
-# if __name__ == "__main__":
-#     import asyncio
-#     # Use the context manager approach for better resource management
-#     asyncio.run(main(AgentInput(message="Tell me recent news about the stock market.")))
