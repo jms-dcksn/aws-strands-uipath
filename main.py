@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 from mcp.client.streamable_http import streamablehttp_client
 from strands.tools.mcp.mcp_client import MCPClient
+from uipath.tracing import traced
 
 def configure_ssl_context() -> None:
     """Configure SSL context with proper certificate paths."""
@@ -38,6 +39,7 @@ streamable_http_mcp_client = MCPClient(lambda: streamablehttp_client(
 # Create a global agent variable
 agent = None
 
+@traced(name="initialize_agent")
 def initialize_agent():
     """Initialize the agent with MCP tools"""
     global agent
@@ -53,6 +55,7 @@ def initialize_agent():
         )
     return agent
 
+@traced(name="call_agent")
 async def main(input: AgentInput):
     # Initialize the agent if not already done
     if agent is None:
